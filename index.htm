@@ -102,22 +102,37 @@
                 var from = coordinates[i];
                 var to = coordinates[i + 1];
 
-                // Calculate the distance between the two coordinates using the Haversine formula
-                var dLat = to.lat - from.lat;
-                var dLon = to.lng - from.lng;
-                var a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(from.lat) * Math.cos(to.lat) * Math.sin(dLon/2) * Math.sin(dLon/2);
-                var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-                var distance = 6371 * c; // Radius of the Earth in km
-
+                distance = getDistanceFromLatLonInKm(from.lat, from.lng, to.lat, to.lng);
+                
                 // Convert the distance from km to miles
                 distance *= 0.621371;
+
+                console.log("Adding new distance: " + distance + " miles");
 
                 // Add the distance to the total
                 totalDistance += distance;
             }
 
             return totalDistance;
-            }
+        }
+
+        function getDistanceFromLatLonInKm(lat1,lon1,lat2,lon2) {
+            var R = 6371; // Radius of the earth in km
+            var dLat = deg2rad(lat2-lat1);  // deg2rad below
+            var dLon = deg2rad(lon2-lon1); 
+            var a = 
+                Math.sin(dLat/2) * Math.sin(dLat/2) +
+                Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * 
+                Math.sin(dLon/2) * Math.sin(dLon/2)
+                ; 
+            var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+            var d = R * c; // Distance in km
+            return d;
+        }
+
+        function deg2rad(deg) {
+            return deg * (Math.PI/180)
+        }
 
 	</script>
 	
